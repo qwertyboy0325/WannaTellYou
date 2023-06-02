@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Singleton
 public class QuestionManager : MonoBehaviour
 {
+    public static QuestionManager Instance;
     // 0: Friend 1: Couple 2: Stranger -1: Not Selected , other number will ignore it.
     private ERelation _selectedRelation;
+    private EQuestionState questionState;
     public ERelation selectedRelation
     {
         set
@@ -19,6 +22,11 @@ public class QuestionManager : MonoBehaviour
     private Relation relation;
     public string[] questions;
     public PlayerStatus player1, player2;
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         ResetFlow();
@@ -87,3 +95,22 @@ public class Round
     }
 }
 
+// Question Event:
+// 0x00000000
+//         ^^
+//         ||_player 1 finished
+//         |
+//         |__player 2 finished
+//         
+enum EQuestionState : byte
+{
+    None = 0x00,
+    PlayerOneIsFinished = 0x01,
+    PlayerTwoIsFinished = 0x02,
+    RoundSkipped = 0x04,
+    RoundStored = 0x08,
+    RoundFinished = 0x10,
+    AllRoundComplete = 0x20,
+    InRound = 0x40,
+    ResetQuestion = 0x80
+}
