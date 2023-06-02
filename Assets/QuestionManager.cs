@@ -9,7 +9,7 @@ public class QuestionManager : MonoBehaviour
     public static QuestionManager Instance;
     // 0: Friend 1: Couple 2: Stranger -1: Not Selected , other number will ignore it.
     private ERelation _selectedRelation;
-    private EQuestionState questionState;
+    private byte state;
     public ERelation selectedRelation
     {
         set
@@ -51,6 +51,11 @@ public class QuestionManager : MonoBehaviour
 
         // init workflow status
         selectedRelation = ERelation.None;
+    }
+    void EndFlow()
+    {
+        ResetFlow();
+        GameManager.Instance.UpdateGameState(EGameState.ReviewAnser);
     }
     void assignRelationType()
     {
