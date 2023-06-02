@@ -20,6 +20,7 @@ public class QuestionManager : MonoBehaviour
         get => _selectedRelation;
     }
     private Relation relation;
+    [HideInInspector]
     public string[] questions;
     public PlayerStatus player1, player2;
     private void Awake()
@@ -41,7 +42,7 @@ public class QuestionManager : MonoBehaviour
     // Code for express the flow (just for reference, dont use it.)
     void Flow()
     {
-        assignRelationType();
+        AssignRelationType();
     }
     void ResetFlow()
     {
@@ -57,7 +58,7 @@ public class QuestionManager : MonoBehaviour
         ResetFlow();
         GameManager.Instance.UpdateGameState(EGameState.ReviewAnser);
     }
-    void assignRelationType()
+    void AssignRelationType()
     {
         switch (selectedRelation)
         {
