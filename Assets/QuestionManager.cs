@@ -30,7 +30,6 @@ public class QuestionManager : MonoBehaviour
 
     void Start()
     {
-        ResetFlow();
     }
 
     // Update is called once per frame
@@ -89,6 +88,10 @@ public class PlayerStatus
     }
     public void setRound(int roundCount) {
         rounds = new Round[roundCount];
+        for(int i = 0; i < rounds.Length; i++)
+        {
+            rounds[i] = new Round();
+        }
     }
 }
 public class Round
