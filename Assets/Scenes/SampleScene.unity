@@ -554,7 +554,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dd25297ce702594caf7ae5c6b79e100, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedRelation: 2
+  selectedRelation: 0
+  questions: []
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

@@ -62,7 +62,7 @@
     <Compile Include="Assets\Model\Couple.cs" />
     <Compile Include="Assets\Audio\AudioManager.cs" />
     <Compile Include="Assets\arduino_serial_port_test.cs" />
-    <Compile Include="Assets\Workflow.cs" />
+    <Compile Include="Assets\QuestionManager.cs" />
     <Compile Include="Assets\GameManager.cs" />
   </ItemGroup>
   <ItemGroup>
