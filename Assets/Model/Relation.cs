@@ -19,15 +19,15 @@ abstract public class Relation
 }
 
 // The set of all relation
-public class RelationSets
-{
+//public class RelationSets
+//{
 
-    public Relation[] relations;
-    public RelationSets()
-    {
-        relations = new Relation[3];
-        relations[0] = new Friend();
-        relations[1] = new Couple();
-        relations[2] = new Stranger();
-    }
-}
+//    public Relation[] relations;
+//    public RelationSets()
+//    {
+//        relations = new Relation[3];
+//        relations[0] = new Friend();
+//        relations[1] = new Couple();
+//        relations[2] = new Stranger();
+//    }
+//}
