@@ -2,17 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Singleton
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public static GameManager Instance;
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
+}
+
+public enum EGameState
+{
+    Idle,
+    Introduce,
+    PutQuestion,
+    AwaitAnswer,
+    FinishAnser,
+    ReviewAnser,
+    Ending,
 }
