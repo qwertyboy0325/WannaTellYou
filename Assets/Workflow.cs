@@ -12,7 +12,7 @@ public class Workflow : MonoBehaviour
         set
         {
             _selectedRelation = value;
-            resetFlow();
+            ResetFlow();
         }
         get => _selectedRelation;
     }
@@ -21,14 +21,7 @@ public class Workflow : MonoBehaviour
     public PlayerStatus player1, player2;
     void Start()
     {
-        // init var
-        // RelationSets relationSets = new RelationSets();
-        // relations = relationSets.relations;
-        player1 = new PlayerStatus();
-        player2 = new PlayerStatus();
-
-        // init workflow status
-        selectedRelation = ERelation.None;
+        ResetFlow();
     }
 
     // Update is called once per frame
@@ -38,13 +31,18 @@ public class Workflow : MonoBehaviour
     }
 
     // Code for express the flow (just for reference, dont use it.)
-    void flow()
+    void Flow()
     {
         assignRelationType();
     }
-    void resetFlow()
+    void ResetFlow()
     {
+        // init var
+        player1 = new PlayerStatus();
+        player2 = new PlayerStatus();
 
+        // init workflow status
+        selectedRelation = ERelation.None;
     }
     void assignRelationType()
     {
@@ -62,10 +60,6 @@ public class Workflow : MonoBehaviour
                 relation = new Stranger();
                 break;
         }
-    }
-    private void OnValidate()
-    {
-
     }
 }
 public class PlayerStatus
