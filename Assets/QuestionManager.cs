@@ -7,17 +7,36 @@ using UnityEngine;
 public class QuestionManager : MonoBehaviour
 {
     public static QuestionManager Instance;
+    public static event System.Action<ERelation> OnRelationChanged;
+
     // 0: Friend 1: Couple 2: Stranger -1: Not Selected , other number will ignore it.
     private ERelation _selectedRelation;
-    private byte state;
+    private byte questionState;
     public ERelation selectedRelation
     {
         set
         {
-            _selectedRelation = value;
-            ResetFlow();
+            UpdateRelation(value);
         }
         get => _selectedRelation;
+    }
+
+    public void UpdateRelation(ERelation newState)
+    {
+        _selectedRelation = newState;
+        switch (newState)
+        {
+            case ERelation.Friend:
+                break;
+            case ERelation.Couple:
+                break;
+            case ERelation.Stranger:
+                break;
+            case ERelation.None:
+                break;
+            default:
+                break;
+        }
     }
     private Relation relation;
     [HideInInspector]
@@ -26,10 +45,16 @@ public class QuestionManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        GameManager.OnGameStateChanged += OnGameManagerStateChanged;
+    }
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChanged -= OnGameManagerStateChanged;
     }
 
     void Start()
     {
+        UpdateRelation(ERelation.None);
     }
 
     // Update is called once per frame
@@ -38,10 +63,34 @@ public class QuestionManager : MonoBehaviour
 
     }
 
-    // Code for express the flow (just for reference, dont use it.)
-    void Flow()
+    void OnGameManagerStateChanged(EGameState state)
     {
-        AssignRelationType();
+        switch (state)
+        {
+            case EGameState.Idle:
+                break;
+            case EGameState.Introduce:
+                break;
+            case EGameState.PutQuestion:
+                break;
+            case EGameState.AwaitAnswer:
+                break;
+            case EGameState.FinishAnser:
+                break;
+            case EGameState.ReviewAnser:
+                break;
+            case EGameState.Ending:
+                ResetFlow();
+                break;
+            default:
+                break;
+        }
+
+    }
+        // Code for express the flow (just for reference, dont use it.)
+        void Flow()
+    {
+        AssignRelation();
     }
     void ResetFlow()
     {
@@ -57,7 +106,7 @@ public class QuestionManager : MonoBehaviour
         ResetFlow();
         GameManager.Instance.UpdateGameState(EGameState.ReviewAnser);
     }
-    void AssignRelationType()
+    void AssignRelation()
     {
         switch (selectedRelation)
         {
@@ -74,11 +123,11 @@ public class QuestionManager : MonoBehaviour
                 break;
         }
     }
-}
-public class PlayerStatus
+    }
+    public class PlayerStatus
 {
     bool phoneState;
-    Round[] rounds;
+    Record[] records;
     public PlayerStatus()
     {
     }
@@ -87,18 +136,19 @@ public class PlayerStatus
         setRound(roundCount);
     }
     public void setRound(int roundCount) {
-        rounds = new Round[roundCount];
-        for(int i = 0; i < rounds.Length; i++)
+        records = new Record[roundCount];
+        for(int i = 0; i < records.Length; i++)
         {
-            rounds[i] = new Round();
+            records[i] = new Record();
         }
     }
 }
-public class Round
+
+public class Record
 {
     float startTime;
     float endTime;
-    public Round()
+    public Record()
     {
 
     }
