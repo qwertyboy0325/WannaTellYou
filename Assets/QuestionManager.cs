@@ -47,6 +47,7 @@ public class QuestionManager : MonoBehaviour
         Instance = this;
         GameManager.OnGameStateChanged += OnGameManagerStateChanged;
     }
+
     private void OnDestroy()
     {
         GameManager.OnGameStateChanged -= OnGameManagerStateChanged;
