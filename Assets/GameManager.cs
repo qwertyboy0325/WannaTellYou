@@ -7,7 +7,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public EGameState state;
+    private EGameState state;
     public static event System.Action<EGameState> OnGameStateChanged;
     void Awake()
     {
