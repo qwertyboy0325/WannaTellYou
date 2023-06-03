@@ -56,14 +56,15 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GameManager.cs" />
     <Compile Include="Assets\Model\Friend.cs" />
     <Compile Include="Assets\Model\Stranger.cs" />
     <Compile Include="Assets\Model\Relation.cs" />
     <Compile Include="Assets\Model\Couple.cs" />
     <Compile Include="Assets\Audio\AudioManager.cs" />
-    <Compile Include="Assets\arduino_serial_port_test.cs" />
+    <Compile Include="Assets\ArduinoSerial.cs" />
     <Compile Include="Assets\QuestionManager.cs" />
-    <Compile Include="Assets\GameManager.cs" />
+    <Compile Include="Assets\InputControll.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

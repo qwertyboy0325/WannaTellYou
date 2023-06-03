@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class QuestionManager : MonoBehaviour
 
     // 0: Friend 1: Couple 2: Stranger -1: Not Selected , other number will ignore it.
     private ERelation _selectedRelation;
-    private byte questionState;
+    private byte state;
     public ERelation selectedRelation
     {
         set
@@ -41,7 +42,8 @@ public class QuestionManager : MonoBehaviour
     private Relation relation;
     [HideInInspector]
     public string[] questions;
-    public PlayerStatus player1, player2;
+    private uint roundCount;
+    public Player player1, player2;
     private void Awake()
     {
         Instance = this;
@@ -55,6 +57,7 @@ public class QuestionManager : MonoBehaviour
 
     void Start()
     {
+        roundCount = 0;
         UpdateRelation(ERelation.None);
     }
 
@@ -81,31 +84,21 @@ public class QuestionManager : MonoBehaviour
             case EGameState.ReviewAnser:
                 break;
             case EGameState.Ending:
-                ResetFlow();
+                ClearFlow();
                 break;
             default:
                 break;
         }
 
     }
-        // Code for express the flow (just for reference, dont use it.)
-        void Flow()
-    {
-        AssignRelation();
-    }
-    void ResetFlow()
+    void ClearFlow()
     {
         // init var
-        player1 = new PlayerStatus();
-        player2 = new PlayerStatus();
+        player1 = new Player();
+        player2 = new Player();
 
-        // init workflow status
-        selectedRelation = ERelation.None;
-    }
-    void EndFlow()
-    {
-        ResetFlow();
-        GameManager.Instance.UpdateGameState(EGameState.ReviewAnser);
+        relation = null;
+        roundCount = 0;
     }
     void AssignRelation()
     {
@@ -122,34 +115,79 @@ public class QuestionManager : MonoBehaviour
             case ERelation.Stranger:
                 relation = new Stranger();
                 break;
+            default:
+                break;
         }
     }
+
+    public void InitFlow(ERelation newState)
+    {
+        if (newState == ERelation.None) return;
+        roundCount = 0;
+        UpdateRelation(newState);
+        GameManager.Instance.UpdateGameState(EGameState.Introduce);
+        AssignRelation();
+
+        GenerateQuestion();
+        InitPlayers();
     }
-    public class PlayerStatus
+
+    private void InitPlayers()
+    {
+        player1 = new Player();
+        player2 = new Player();
+    }
+
+    private void GenerateQuestion()
+    {
+        questions = relation.getQuestions();
+    }
+
+    public void UpdateRelationState(ERelation newState)
+    {
+        selectedRelation = newState;
+        switch (selectedRelation)
+        {
+            case ERelation.Friend:
+                break;
+            case ERelation.Couple:
+                break;
+            case ERelation.Stranger:
+                break;
+            case ERelation.None:
+                break;
+            default:
+                break;
+        }
+        OnRelationChanged?.Invoke(newState);
+    }
+}
+public class Player
 {
     bool phoneState;
-    Record[] records;
-    public PlayerStatus()
+    RecordTimeStamp[] recordsTimeStamps;
+    public Player()
     {
     }
-    public PlayerStatus(int roundCount)
+    public Player(int roundCount)
     {
         setRound(roundCount);
     }
-    public void setRound(int roundCount) {
-        records = new Record[roundCount];
-        for(int i = 0; i < records.Length; i++)
+    public void setRound(int roundCount)
+    {
+        recordsTimeStamps = new RecordTimeStamp[roundCount];
+        for (int i = 0; i < recordsTimeStamps.Length; i++)
         {
-            records[i] = new Record();
+            recordsTimeStamps[i] = new RecordTimeStamp();
         }
     }
 }
 
-public class Record
+public class RecordTimeStamp
 {
     float startTime;
     float endTime;
-    public Record()
+    public RecordTimeStamp()
     {
 
     }
@@ -162,7 +200,7 @@ public class Record
 //         |
 //         |__player 2 finished
 //         
-enum EQuestionState : byte
+public enum EQuestionState : byte
 {
     None = 0x00,
     PlayerOneIsFinished = 0x01,
