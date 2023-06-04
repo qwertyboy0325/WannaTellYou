@@ -44,11 +44,11 @@ public class Friend : Relation
             string randomString = Questions[Random.Range(0, Questions.Length)];
             foreach (var i in current)
             {
-                if (System.Array.Exists(current, element => element == i)) isRepeat = true;
+                if (System.Array.Exists(current, element => element == randomString)) isRepeat = true;
             }
             result = randomString;
 
-        } while (!isRepeat);
+        } while (isRepeat);
 
         return result;
     }

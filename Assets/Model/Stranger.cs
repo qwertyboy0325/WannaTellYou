@@ -16,23 +16,23 @@ public class Stranger : Relation
             "最想去哪裡旅遊?為甚麼?",
             "喜歡什麼運動?",
             "動物能代表人的性格，你覺得你像哪種動物?為甚麼?",
-            "想跟對方認識嗎（固定第四題）"
+            "想跟對方認識嗎?"
         };
         maxQuestionLimit = 4;
     }
     override public string[] getQuestions()
     {
         List<string> result = new List<string>();
-        while (result.Count < maxQuestionLimit)
+        while (result.Count < maxQuestionLimit -1)
         {
             string randomString = Questions[Random.Range(0, Questions.Length - 1)];
             if (!result.Contains(randomString))
             {
                 result.Add(randomString);
             }
-            // Add Last Question that will always be in List.
-            result.Add(Questions[Questions.Length - 1]);
         }
+        // Add Last Question that will always be in List.
+        result.Add(Questions[Questions.Length - 1]);
         return result.ToArray();
     }
     public override string getQuestion(string[] current)
@@ -42,13 +42,17 @@ public class Stranger : Relation
         do
         {
             string randomString = Questions[Random.Range(0, Questions.Length-1)];
+            isRepeat = false;
             foreach (var i in current)
             {
-                if (System.Array.Exists(current, element => element == i)) isRepeat = true;
+                //Debug.Log(i);
+                if (System.Array.Exists(current, element => element == randomString)) isRepeat = true;
             }
+
+            //Debug.Log(randomString);
             result = randomString;
 
-        } while (!isRepeat);
+        } while (isRepeat);
 
         return result;
     }

@@ -9,6 +9,7 @@ public class QuestionManager : MonoBehaviour
 {
     public static QuestionManager Instance;
     public static event System.Action<ERelation> OnRelationChanged;
+    public static event System.Action<String> OnQuestionChanged;
 
     // 0: Friend 1: Couple 2: Stranger -1: Not Selected , other number will ignore it.
     private ERelation _selectedRelation;
@@ -17,32 +18,15 @@ public class QuestionManager : MonoBehaviour
     {
         set
         {
-            UpdateRelation(value);
+            _selectedRelation = value;
         }
         get => _selectedRelation;
     }
 
-    public void UpdateRelation(ERelation newState)
-    {
-        _selectedRelation = newState;
-        switch (newState)
-        {
-            case ERelation.Friend:
-                break;
-            case ERelation.Couple:
-                break;
-            case ERelation.Stranger:
-                break;
-            case ERelation.None:
-                break;
-            default:
-                break;
-        }
-    }
-    private Relation relation;
+    public Relation relation { private set; get; }
     [HideInInspector]
     public string[] questions;
-    private uint roundCount;
+    public uint roundCount { private set; get; }
     public Player player1, player2;
     private void Awake()
     {
@@ -58,13 +42,18 @@ public class QuestionManager : MonoBehaviour
     void Start()
     {
         roundCount = 0;
-        UpdateRelation(ERelation.None);
+        UpdateRelationState(ERelation.None);
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public bool IsCompleteQuestion()
+    {
+        return false;
     }
 
     void OnGameManagerStateChanged(EGameState state)
@@ -79,9 +68,9 @@ public class QuestionManager : MonoBehaviour
                 break;
             case EGameState.AwaitAnswer:
                 break;
-            case EGameState.FinishAnser:
+            case EGameState.FinishAnswer:
                 break;
-            case EGameState.ReviewAnser:
+            case EGameState.ReviewAnswer:
                 break;
             case EGameState.Ending:
                 ClearFlow();
@@ -93,7 +82,6 @@ public class QuestionManager : MonoBehaviour
     }
     void ClearFlow()
     {
-        // init var
         player1 = new Player();
         player2 = new Player();
 
@@ -124,7 +112,7 @@ public class QuestionManager : MonoBehaviour
     {
         if (newState == ERelation.None) return;
         roundCount = 0;
-        UpdateRelation(newState);
+        UpdateRelationState(newState);
         GameManager.Instance.UpdateGameState(EGameState.Introduce);
         AssignRelation();
 
@@ -134,8 +122,8 @@ public class QuestionManager : MonoBehaviour
 
     private void InitPlayers()
     {
-        player1 = new Player();
-        player2 = new Player();
+        player1 = new Player(relation.maxQuestionLimit);
+        player2 = new Player(relation.maxQuestionLimit);
     }
 
     private void GenerateQuestion()
@@ -146,6 +134,8 @@ public class QuestionManager : MonoBehaviour
     public void UpdateRelationState(ERelation newState)
     {
         selectedRelation = newState;
+
+        Debug.Log("Updated Relation Type: "+_selectedRelation);
         switch (selectedRelation)
         {
             case ERelation.Friend:
@@ -160,6 +150,24 @@ public class QuestionManager : MonoBehaviour
                 break;
         }
         OnRelationChanged?.Invoke(newState);
+    }
+
+    public string GetCurrentQuestion()
+    {
+        return questions[roundCount];
+    }
+
+    public void NextQuestion()
+    {
+        roundCount++;
+        OnQuestionChanged?.Invoke(questions[roundCount]);
+    }
+
+    public void RedrawQuestion()
+    {
+        Debug.Log("redraw : " + roundCount);
+        questions[roundCount] = relation.getQuestion(questions);
+        OnQuestionChanged?.Invoke(questions[roundCount]);
     }
 }
 public class Player
