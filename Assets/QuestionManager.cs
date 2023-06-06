@@ -16,7 +16,7 @@ public class QuestionManager : MonoBehaviour
     private byte state;
     public ERelation selectedRelation
     {
-        set
+        private set
         {
             _selectedRelation = value;
         }
@@ -51,9 +51,10 @@ public class QuestionManager : MonoBehaviour
 
     }
 
-    public bool IsCompleteQuestion()
+    public bool IsCompletedQuestion()
     {
-        return false;
+        // TODO: condition current round is completed or not.
+        return true ;
     }
 
     void OnGameManagerStateChanged(EGameState state)

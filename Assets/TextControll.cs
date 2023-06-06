@@ -45,7 +45,6 @@ public class TextControll : MonoBehaviour
 
     private void OnQuestionChanged(string question)
     {
-        GameManager.Instance.UpdateGameState(EGameState.PutQuestion);
     }
 
     private void OnGameStateChanged(EGameState state)
@@ -92,6 +91,10 @@ public class TextControll : MonoBehaviour
             StopCoroutine(currentFadeCoroutine);
         }
         currentFadeCoroutine = StartCoroutine(FadeInTextCoroutine(newText));
+    }
+    public void CleanText()
+    {
+        UpdateText("");
     }
 
     void Start()

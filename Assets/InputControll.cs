@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class InputControll : MonoBehaviour
 {
+    public AudioRecorder audioRecorder;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +40,7 @@ public class InputControll : MonoBehaviour
                     GameManager.Instance.UpdateGameState(EGameState.AwaitAnswer);
                     break;
                 case EGameState.AwaitAnswer:
+                    AwaitAnswerHandler();
                     break;
                 case EGameState.FinishAnswer:
                     GameManager.Instance.UpdateGameState(EGameState.ReviewAnswer);
@@ -55,5 +57,41 @@ public class InputControll : MonoBehaviour
         {
             QuestionManager.Instance.RedrawQuestion();
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            audioRecorder.StartRecording();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            audioRecorder.StopRecording();
+
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            AudioClip audioAssets = audioRecorder.GetRecordedAsset();
+
+            //Debug.Log(audioAssets);
+            audioRecorder.audioSource.clip = audioAssets;
+            audioRecorder.audioSource.Play();
+        }
+    }
+    private void AwaitAnswerHandler()
+    {
+        // StopCoroutine(currentPutQuestionCoroutine);
+        if (!QuestionManager.Instance.IsCompletedQuestion())
+        {
+            QuestionManager.Instance.RedrawQuestion();
+            return;
+        }
+        uint roundCount = QuestionManager.Instance.roundCount;
+        int maxCount = QuestionManager.Instance.relation.maxQuestionLimit;
+        Debug.Log(roundCount);
+        if (roundCount >= maxCount - 1)
+        {
+            GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
+            return;
+        }
+        // Next Question case:
+        QuestionManager.Instance.NextQuestion();
     }
 }

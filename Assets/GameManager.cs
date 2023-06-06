@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public VideoController videoController;
+    public TextControll textControll;
     private EGameState _state;
     private Coroutine currentPutQuestionCoroutine;
     public EGameState state { get => _state; }
@@ -17,7 +18,36 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        VideoController.OnVideoStateChanged += OnVideoStateChanged;
     }
+
+    private void OnVideoStateChanged(VideoStatus videoStatus)
+    {
+        if (videoStatus.currentState == 0) return;
+        switch (videoStatus.currentVideo)
+        {
+            case EVideo.Idle:
+                break;
+            case EVideo.Introduce:
+                break;
+            case EVideo.FriendQuestion:
+                textControll.CleanText();
+                break;
+            case EVideo.CoupleQuestion:
+                textControll.CleanText();
+                break;
+            case EVideo.StrangerQuestion:
+                textControll.CleanText();
+                break;
+            case EVideo.FirstLevel:
+                break;
+            case EVideo.SecondLevel:
+                break;
+            case EVideo.ThirdLevel:
+                break;
+        }
+    }
+
     public void UpdateGameState(EGameState newState)
     {
         _state = newState;
@@ -52,7 +82,6 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator UpdatePutQuestionToAwaitQuestion()
     {
-        Debug.Log("AAAA");
         yield return new WaitForSeconds(3f);
         _state = EGameState.AwaitAnswer;
         OnGameStateChanged?.Invoke(EGameState.AwaitAnswer);
@@ -80,13 +109,14 @@ public class GameManager : MonoBehaviour
     private void AwaitAnswerHandler()
     {
         StopCoroutine(currentPutQuestionCoroutine);
-        if (!QuestionManager.Instance.IsCompleteQuestion())
+        if (!QuestionManager.Instance.IsCompletedQuestion())
         {
             QuestionManager.Instance.RedrawQuestion();
             return;
         }
         uint roundCount = QuestionManager.Instance.roundCount;
         int maxCount = QuestionManager.Instance.relation.maxQuestionLimit;
+        Debug.Log(roundCount);
         if (roundCount >= maxCount - 1)
         {
             UpdateGameState(EGameState.FinishAnswer);
@@ -98,6 +128,7 @@ public class GameManager : MonoBehaviour
 
     private void PutQuestionHandler()
     {
+        if (currentPutQuestionCoroutine != null) StopCoroutine(currentPutQuestionCoroutine);
         switch (QuestionManager.Instance.selectedRelation)
         {
             case ERelation.Friend:

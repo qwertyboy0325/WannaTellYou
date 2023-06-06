@@ -81,37 +81,41 @@ public class VideoController : MonoBehaviour
 
                 break;
             case EVideo.FriendQuestion:
-                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit)
+                // 如果此回合不成立則重抽排,完成後退出迴圈
+                if (!QuestionManager.Instance.IsCompletedQuestion())
+                {
+                    QuestionManager.Instance.RedrawQuestion();
+                    break;
+                }
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit -1)
                 {
                     GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
                     break;
                 }
-                //GameManager.Instance.UpdateGameState(EGameState.PutQuestion);
-                QuestionNextStep(currentPlaying);
+                PlayVideo(EVideo.FirstLevel + (int)QuestionManager.Instance.roundCount);
                 break;
             case EVideo.CoupleQuestion:
-                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit)
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit -1)
                 {
                     GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
                     break;
                 }
-                //GameManager.Instance.UpdateGameState(EGameState.PutQuestion);
-                QuestionNextStep(currentPlaying);
                 break;
             case EVideo.StrangerQuestion:
-                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit)
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit -1)
                 {
                     GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
                     break;
                 }
-                //GameManager.Instance.UpdateGameState(EGameState.PutQuestion);
-                QuestionNextStep(currentPlaying);
                 break;
             case EVideo.FirstLevel:
+                QuestionNextStep(currentPlaying);
                 break;
             case EVideo.SecondLevel:
+                QuestionNextStep(currentPlaying);
                 break;
             case EVideo.ThirdLevel:
+                //QuestionNextStep(currentPlaying);
                 break;
         }
     }
@@ -186,6 +190,6 @@ public struct VideoStatus
         currentVideo = EV;
         currentState = CS;
     }
-    EVideo currentVideo;
-    int currentState;
+    public EVideo currentVideo;
+    public int currentState;
 }
