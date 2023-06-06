@@ -67,8 +67,18 @@ public class IPCServer : MonoBehaviour
                 float[] floatData = new float[byteCount / sizeof(float)];
                 for (int i = 0; i < floatData.Length; i++)
                 {
-                    int intValue = System.BitConverter.ToInt32(byteData, i * sizeof(int));
-                    floatData[i] = IntToFloatSample(intValue);
+                    try
+                    {
+                        int intValue = System.BitConverter.ToInt32(byteData, i * sizeof(int));
+                        floatData[i] = IntToFloatSample(intValue);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        // 處理例外狀況，例如記錄錯誤訊息或回傳預設的音訊資料
+                        Debug.LogError("Error converting memory content to float: " + ex.Message);
+                        // 在這裡可以回傳預設的 AudioClip 或其他適當的處理方式
+                        return null;
+                    }
                 }
 
                 // 建立 AudioClip
@@ -80,9 +90,48 @@ public class IPCServer : MonoBehaviour
         }
     }
 
+    private void NotifyIPCClient(string message)
+    {
+        using (NamedPipeClientStream clientStream = new NamedPipeClientStream(".", "AudioIPC"))
+        {
+            // 連接到命管道伺服器
+            clientStream.Connect();
+
+            using (StreamWriter writer = new StreamWriter(clientStream))
+            {
+                // 寫入訊息
+                writer.WriteLine(message);
+                writer.Flush();
+            }
+        }
+    }
+
     private static float IntToFloatSample(int value)
     {
         const float intToFloatConversionFactor = 1.0f / (1 << 31);
         return value * intToFloatConversionFactor;
+    }
+
+    public int IPCCall(EIPCAction action)
+    {
+        switch (action)
+        {
+            case EIPCAction.StartRecord:
+                NotifyIPCClient("startRec");
+                break;
+            case EIPCAction.StopRecord:
+                NotifyIPCClient("stopRec");
+                break;
+            case EIPCAction.Exit:
+                NotifyIPCClient("exit");
+                break;
+        }
+        return 1;
+    }
+    public enum EIPCAction
+    {
+        StartRecord,
+        StopRecord,
+        Exit
     }
 }
