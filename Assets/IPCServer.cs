@@ -15,7 +15,7 @@ public class IPCServer : MonoBehaviour
     private void Start()
     {
         serverStream = new NamedPipeServerStream("AudioIPC");
-        memoryMappedFile = MemoryMappedFile.CreateNew("AudioIPCSharedMemory",200000000);
+        memoryMappedFile = MemoryMappedFile.CreateNew("AudioIPCSharedMemory", 200000000);
         serverStream.WaitForConnection();
 
         // 在另一執行緒中持續接收訊息
@@ -36,6 +36,7 @@ public class IPCServer : MonoBehaviour
             }
         }
     }
+
     private void WriteToSharedMemory(string message)
     {
         using (MemoryMappedViewAccessor accessor = memoryMappedFile.CreateViewAccessor())
@@ -44,16 +45,17 @@ public class IPCServer : MonoBehaviour
             accessor.WriteArray(0, data, 0, data.Length);
         }
     }
+
     private void OnDestroy()
     {
         serverStream.Close();
         memoryMappedFile.Dispose();
     }
-    // 其他程式存取共享記憶體的方法
+
     // 其他程式存取共享記憶體的方法
     public static AudioClip ReadSharedMemoryAsAudioClip()
     {
-        using (MemoryMappedFile mmf = MemoryMappedFile.OpenExisting("MySharedMemory"))
+        using (MemoryMappedFile mmf = MemoryMappedFile.OpenExisting("AudioIPCSharedMemory"))
         {
             using (MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor())
             {
@@ -65,7 +67,8 @@ public class IPCServer : MonoBehaviour
                 float[] floatData = new float[byteCount / sizeof(float)];
                 for (int i = 0; i < floatData.Length; i++)
                 {
-                    floatData[i] = (float)System.BitConverter.ToInt32(byteData, i * sizeof(float));
+                    int intValue = System.BitConverter.ToInt32(byteData, i * sizeof(int));
+                    floatData[i] = IntToFloatSample(intValue);
                 }
 
                 // 建立 AudioClip
@@ -77,5 +80,9 @@ public class IPCServer : MonoBehaviour
         }
     }
 
-
+    private static float IntToFloatSample(int value)
+    {
+        const float intToFloatConversionFactor = 1.0f / (1 << 31);
+        return value * intToFloatConversionFactor;
+    }
 }
