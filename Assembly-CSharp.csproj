@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{DBBC92B7-F125-BC4B-E03B-622D7DB9AD53}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -75,9 +76,11 @@
     <Compile Include="Assets\Model\Quotation.cs" />
     <Compile Include="Assets\Model\Stranger.cs" />
     <Compile Include="Assets\AudioToolkit\Demo\AudioToolkitDemo.cs" />
-    <Compile Include="Assets\Audio\AudioRecorder.cs" />
-    <Compile Include="Assets\InputControll.cs" />
     <Compile Include="Assets\IPCServer.cs" />
+    <Compile Include="Assets\Audio\AudioManager.cs" />
+    <Compile Include="Assets\InputControll.cs" />
+    <Compile Include="Assets\WavUtility.cs" />
+    <Compile Include="Assets\IPCManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

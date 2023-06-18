@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class InputControll : MonoBehaviour
 {
-    public AudioRecorder audioRecorder;
+    public AudioManager audioManager;
+    public ArduinoSerial arduinoSerial;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,14 +18,17 @@ public class InputControll : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            arduinoSerial.writeData("777");
             QuestionManager.Instance.InitFlow(ERelation.Friend);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            arduinoSerial.writeData("777");
             QuestionManager.Instance.InitFlow(ERelation.Couple);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
+            arduinoSerial.writeData("777");
             QuestionManager.Instance.InitFlow(ERelation.Stranger);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
@@ -59,31 +64,30 @@ public class InputControll : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            audioRecorder.StartRecording();
+            audioManager.StartRecording();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            audioRecorder.StopRecording();
+            audioManager.StopRecording();
 
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            AudioClip audioAssets = audioRecorder.GetRecordedAsset();
-
-            //Debug.Log(audioAssets);
-            audioRecorder.audioSource.clip = audioAssets;
-            audioRecorder.audioSource.Play();
+            audioManager.audioSource.Play();
         }
     }
     private void AwaitAnswerHandler()
     {
         // StopCoroutine(currentPutQuestionCoroutine);
+
+        QuestionManager.Instance.player1.SetEndTime(System.DateTime.Now, QuestionManager.Instance.roundCount);
+        QuestionManager.Instance.player2.SetEndTime(System.DateTime.Now, QuestionManager.Instance.roundCount);
         if (!QuestionManager.Instance.IsCompletedQuestion())
         {
             QuestionManager.Instance.RedrawQuestion();
             return;
         }
-        uint roundCount = QuestionManager.Instance.roundCount;
+        int roundCount = QuestionManager.Instance.roundCount;
         int maxCount = QuestionManager.Instance.relation.maxQuestionLimit;
         Debug.Log(roundCount);
         if (roundCount >= maxCount - 1)

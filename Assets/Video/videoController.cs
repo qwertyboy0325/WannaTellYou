@@ -17,6 +17,7 @@ public enum EVideo
 }
 public class VideoController : MonoBehaviour
 {
+    public ArduinoSerial arduinoSerial;
     public Video[] videos;
     [System.Serializable]
     public struct Video
@@ -69,6 +70,7 @@ public class VideoController : MonoBehaviour
 
     private void OnVideoEnd()
     {
+        char tmp;
         switch (currentPlaying)
         {
             case EVideo.Idle:
@@ -87,34 +89,63 @@ public class VideoController : MonoBehaviour
                     QuestionManager.Instance.RedrawQuestion();
                     break;
                 }
-                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit -1)
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit - 1)
                 {
                     GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
                     break;
                 }
+                tmp = (char)('1' + QuestionManager.Instance.roundCount);
+                arduinoSerial.writeData(tmp.ToString());
+                QuestionManager.Instance.player1.SetEndTime(DateTime.Now, QuestionManager.Instance.roundCount);
+                if (QuestionManager.Instance.roundCount == 2) break;
                 PlayVideo(EVideo.FirstLevel + (int)QuestionManager.Instance.roundCount);
                 break;
             case EVideo.CoupleQuestion:
-                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit -1)
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit - 1)
                 {
                     GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
                     break;
                 }
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit - 1)
+                {
+                    GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
+                    break;
+                }
+                tmp = (char)('1' + QuestionManager.Instance.roundCount);
+                arduinoSerial.writeData(tmp.ToString());
+                QuestionManager.Instance.player1.SetEndTime(DateTime.Now, QuestionManager.Instance.roundCount);
+                PlayVideo(EVideo.FirstLevel + (int)QuestionManager.Instance.roundCount);
+                if (QuestionManager.Instance.roundCount == 2) break;
                 break;
             case EVideo.StrangerQuestion:
-                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit -1)
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit - 1)
                 {
                     GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
                     break;
                 }
+                if (QuestionManager.Instance.roundCount >= QuestionManager.Instance.relation.maxQuestionLimit - 1)
+                {
+                    GameManager.Instance.UpdateGameState(EGameState.FinishAnswer);
+                    break;
+                }
+                tmp = (char)('1' + QuestionManager.Instance.roundCount);
+                arduinoSerial.writeData(tmp.ToString());
+                QuestionManager.Instance.player1.SetEndTime(DateTime.Now, QuestionManager.Instance.roundCount);
+                PlayVideo(EVideo.FirstLevel + (int)QuestionManager.Instance.roundCount);
+                if (QuestionManager.Instance.roundCount == 2) break;
                 break;
             case EVideo.FirstLevel:
                 QuestionNextStep(currentPlaying);
                 break;
             case EVideo.SecondLevel:
                 QuestionNextStep(currentPlaying);
+
+                arduinoSerial.writeData("1");
                 break;
             case EVideo.ThirdLevel:
+                GameManager.Instance.UpdateGameState(EGameState.ReviewAnswer);
+
+                //arduinoSerial.writeData("2");
                 //QuestionNextStep(currentPlaying);
                 break;
         }
@@ -122,7 +153,7 @@ public class VideoController : MonoBehaviour
 
     private void QuestionNextStep(EVideo video)
     {
-        uint roundCount = QuestionManager.Instance.roundCount;
+        int roundCount = QuestionManager.Instance.roundCount;
         int maxCount = QuestionManager.Instance.relation.maxQuestionLimit;
         if (roundCount >= maxCount - 1)
         {

@@ -287,7 +287,7 @@ RectTransform:
   - {fileID: 870426520}
   - {fileID: 1348519505}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -387,8 +387,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 165062157}
+  - component: {fileID: 165062158}
   m_Layer: 0
-  m_Name: Audio
+  m_Name: SFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,14 +402,110 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 165062155}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 913354025}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &165062158
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165062155}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -8584966526105612053, guid: 76a90b7307ce640419379ef85bc03ab6, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 9228378b1adf07a4aa1f4a9844f1995b, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &312715352
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,7 +535,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &477221053
 GameObject:
@@ -449,7 +546,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 477221055}
-  - component: {fileID: 477221054}
   m_Layer: 0
   m_Name: IPCManager
   m_TagString: Untagged
@@ -457,18 +553,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &477221054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477221053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b31b623ab266f04d9a8ddc03f91ffbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &477221055
 Transform:
   m_ObjectHideFlags: 0
@@ -482,7 +566,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -651,6 +735,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 870426519}
   m_CullTransparentMesh: 1
+--- !u!1 &902080472
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 902080474}
+  - component: {fileID: 902080473}
+  m_Layer: 0
+  m_Name: ArduinoConnect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &902080473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902080472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db7f8d5cfe0bb144da1d7676fbd7e360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedPort: 
+  availablePorts: []
+--- !u!4 &902080474
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902080472}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 960, y: 79, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &913354024
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,7 +793,7 @@ GameObject:
   - component: {fileID: 913354027}
   - component: {fileID: 913354026}
   m_Layer: 0
-  m_Name: RecordManager
+  m_Name: AudioManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -680,9 +810,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 165062157}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &913354026
 MonoBehaviour:
@@ -704,9 +835,12 @@ MonoBehaviour:
   - "\u9EA5\u514B\u98A8 (Realtek(R) Audio)"
   - VoiceMeeter Output (VB-Audio VoiceMeeter VAIO)
   - VoiceMeeter Aux Output (VB-Audio VoiceMeeter AUX VAIO)
-  selectedDevice: VoiceMeeter Output (VB-Audio VoiceMeeter VAIO)
+  selectedFirstDeviceProperty: "\u9EA5\u514B\u98A8 (Realtek(R) Audio)"
+  selectedSecDeviceProperty: "\u9EA5\u514B\u98A8 (Sound Blaster Play! 3)"
   audioSource: {fileID: 0}
-  recordedClip: {fileID: 0}
+  SFX: {fileID: 165062158}
+  recordedClip1: {fileID: 0}
+  recordedClip2: {fileID: 0}
 --- !u!82 &913354027
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1041,7 +1175,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1409039573
 MonoBehaviour:
@@ -1055,6 +1189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab59c12839e078e489e95d0ef8558ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioManager: {fileID: 913354026}
+  textControll: {fileID: 1348519506}
   questions: []
 --- !u!1 &1688151462
 GameObject:
@@ -1087,7 +1223,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1688151465
 MonoBehaviour:
@@ -1102,7 +1238,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   videoController: {fileID: 989308715}
+  audioManager: {fileID: 913354026}
   textControll: {fileID: 1348519506}
+  arduinoSerial: {fileID: 902080473}
 --- !u!114 &1688151466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1115,7 +1253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41124b477a438e44b8dc87e4950c41a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioRecorder: {fileID: 913354026}
+  audioManager: {fileID: 913354026}
+  arduinoSerial: {fileID: 902080473}
 --- !u!1001 &3521746952920833054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1223,6 +1362,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3521746953352166197, guid: f9b6b554e601376428f37df4a0036f97, type: 3}
+      propertyPath: arduinoSerial
+      value: 
+      objectReference: {fileID: 902080473}
     - target: {fileID: 3521746953352166197, guid: f9b6b554e601376428f37df4a0036f97, type: 3}
       propertyPath: videos.Array.size
       value: 8

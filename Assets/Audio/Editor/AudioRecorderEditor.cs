@@ -2,22 +2,26 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-[CustomEditor(typeof(AudioRecorder))]
+[CustomEditor(typeof(AudioManager))]
 public class AudioRecorderEditor : Editor
 {
     private SerializedProperty recordingTimeProperty;
     private SerializedProperty outputMixerGroupProperty;
     private SerializedProperty savePathProperty;
     private SerializedProperty availableDevicesProperty;
-    private SerializedProperty selectedDeviceProperty;
+    private SerializedProperty SFXProperty;
+    private SerializedProperty selectedFirstDeviceProperty;
+    private SerializedProperty selectedSecDeviceProperty;
 
     private void OnEnable()
     {
         recordingTimeProperty = serializedObject.FindProperty("recordingTime");
         outputMixerGroupProperty = serializedObject.FindProperty("outputMixerGroup");
         savePathProperty = serializedObject.FindProperty("savePath");
+        SFXProperty = serializedObject.FindProperty("SFX");
         availableDevicesProperty = serializedObject.FindProperty("availableDevices");
-        selectedDeviceProperty = serializedObject.FindProperty("selectedDevice");
+        selectedFirstDeviceProperty = serializedObject.FindProperty("selectedFirstDeviceProperty");
+        selectedSecDeviceProperty = serializedObject.FindProperty("selectedSecDeviceProperty");
     }
 
     public override void OnInspectorGUI()
@@ -27,19 +31,25 @@ public class AudioRecorderEditor : Editor
         EditorGUILayout.PropertyField(recordingTimeProperty);
         EditorGUILayout.PropertyField(outputMixerGroupProperty);
         EditorGUILayout.PropertyField(savePathProperty);
+        EditorGUILayout.PropertyField(SFXProperty);
 
-        AudioRecorder audioRecorder = (AudioRecorder)target;
+        AudioManager audioRecorder = (AudioManager)target;
 
         // 获取可用的录音设备列表
         string[] availableDevices = Microphone.devices;
-        int selectedDeviceIndex = GetSelectedDeviceIndex(selectedDeviceProperty.stringValue, availableDevices);
+        int firstSelectedDeviceIndex = GetSelectedDeviceIndex(selectedFirstDeviceProperty.stringValue, availableDevices);
+        int secondSelectedDeviceIndex = GetSelectedDeviceIndex(selectedSecDeviceProperty.stringValue, availableDevices);
 
         // 显示下拉式选项
-        int newSelectedDeviceIndex = EditorGUILayout.Popup("Recording Device", selectedDeviceIndex, availableDevices);
-
-        if (newSelectedDeviceIndex != selectedDeviceIndex)
+        int newFirstSelectedDeviceIndex = EditorGUILayout.Popup("First Recording Device", firstSelectedDeviceIndex, availableDevices);
+        int newSecondSelectedDeviceIndex = EditorGUILayout.Popup("Second Recording Device", secondSelectedDeviceIndex, availableDevices);
+        if (newFirstSelectedDeviceIndex != firstSelectedDeviceIndex)
         {
-            selectedDeviceProperty.stringValue = availableDevices[newSelectedDeviceIndex];
+            selectedFirstDeviceProperty.stringValue = availableDevices[newFirstSelectedDeviceIndex];
+        }
+        if(newSecondSelectedDeviceIndex != secondSelectedDeviceIndex)
+        {
+            selectedSecDeviceProperty.stringValue = availableDevices[newSecondSelectedDeviceIndex];
         }
 
         serializedObject.ApplyModifiedProperties();
@@ -54,6 +64,7 @@ public class AudioRecorderEditor : Editor
                 return i;
             }
         }
+        Debug.Log(selectedDevice + " is not founded.");
         return 0;
     }
 }

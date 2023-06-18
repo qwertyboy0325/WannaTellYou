@@ -14,72 +14,55 @@ public class ArduinoSerial : MonoBehaviour
     [HideInInspector]
     public string[] availablePorts;
 
-    public GameObject testCube;
+    //public GameObject testCube;
     SerialPort serialPort;
 
     Thread readThread;
 
     bool isNewMessage;
     string readMessage;
-    public Toggle ledToggle;
-
-    private void OnEnable()
-    {
-        RefreshSerialPorts();
-        ReconnectSerialPort();
-    }
-
-    void ReconnectSerialPort()
-    {
-        try
-        {
-            // Open the serial serialPort
-            serialPort.PortName = selectedPort;
-            serialPort.BaudRate = 9600;
-            serialPort.Open();
-            readThread = new Thread(new ThreadStart(readData));
-            readThread.Start();
-            Debug.Log("SerialPort start to connect.");
-        }
-        catch
-        {
-            Debug.Log("SerialPort connct error.");
-        }
-        Debug.Log("Open port success");
-    }
-    void RefreshSerialPorts()
-    {
-        availablePorts = SerialPort.GetPortNames();
 
 
-    }
 
     void Start()
     {
-        // serialPort = new SerialPort("/dev/cu.usbmodem11301", 9600);
         serialPort = new SerialPort();
         serialPort.ReadTimeout = 10;
-
-
-        // Led toggle function
-        ledToggle.onValueChanged.AddListener(OnToggleValueChanged);
+        serialPort.PortName = "COM3";
+        serialPort.BaudRate = 9600;
+        serialPort.Open();
     }
 
-    void Update()
+
+    private void Update()
     {
-        if (isNewMessage)
+        // 檢查串口是否打開
+        if (serialPort != null && serialPort.IsOpen)
         {
-            if (readMessage.Trim() == "1")
+            try
             {
-                testCube.SetActive(true);
+                // 讀取串口數據
+                string data = serialPort.ReadLine();
+                Debug.Log("Received data: " + data);
+                isNewMessage = true;
+                char firstState = data[0];
+                char secondState = data[1];
+                int status;
+                status = int.Parse(firstState.ToString()) << 1;
+
+                status |= int.Parse(secondState.ToString());
+                Debug.Log("Arduino status: " + status);
+                if (GameManager.Instance.state == EGameState.AwaitAnswer)
+                    QuestionManager.Instance.RecievePhoneStatus(status);
             }
-            else
+            catch (System.Exception e)
             {
-                testCube.SetActive(false);
+                Debug.LogWarning("SerialPort error: " + e.Message);
             }
         }
-        isNewMessage = false;
     }
+    //readData();
+
 
     void readData()
     {
@@ -88,7 +71,11 @@ public class ArduinoSerial : MonoBehaviour
             try
             {
                 readMessage = serialPort.ReadLine();
+                Debug.Log("Arduino send: " + readMessage);
                 isNewMessage = true;
+                int status = int.Parse(readMessage);
+                QuestionManager.Instance.RecievePhoneStatus(status);
+
             }
             catch (System.Exception e)
             {
@@ -98,7 +85,7 @@ public class ArduinoSerial : MonoBehaviour
         }
     }
 
-    void writeData(string message)
+    public void writeData(string message)
     {
         Debug.Log(message);
         try
@@ -120,53 +107,4 @@ public class ArduinoSerial : MonoBehaviour
         }
     }
 
-    /// Toggle the Led
-    void OnToggleValueChanged(bool val)
-    {
-        string ledStatus = val == true ? "1" : "0";
-        writeData(ledStatus);
-    }
-}
-
-// 自定義Inspector繪製器，用於繪製下拉式選單
-[CustomEditor(typeof(ArduinoSerial))]
-public class SerialPortDropdownEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        // 繪製默認的屬性編輯器
-        DrawDefaultInspector();
-
-        // 獲取腳本引用
-        ArduinoSerial dropdown = (ArduinoSerial)target;
-
-        // 獲取可用的串口名稱
-        string[] availablePorts = dropdown.availablePorts;
-
-        // 獲取選擇的串口
-        string selectedPort = dropdown.selectedPort;
-
-        // 如果可用串口不為空，則繪製下拉式選單
-        if (availablePorts.Length != 0 || availablePorts == null)
-        {
-            Debug.Log(availablePorts.Length);
-            // 如果選擇的串口不在可用串口列表中，將其設置為第一個可用串口
-            if (!System.Array.Exists(availablePorts, element => element == selectedPort))
-            {
-                selectedPort = availablePorts.Length > 0 ? availablePorts[0] : "";
-                dropdown.selectedPort = selectedPort;
-            }
-
-            // 繪製下拉式選單
-            int selectedIndex = EditorGUILayout.Popup("Serial Port", System.Array.IndexOf(availablePorts, selectedPort), availablePorts);
-
-            // 更新選擇的串口
-            dropdown.selectedPort = availablePorts[selectedIndex];
-        }
-        else
-        {
-            int selectedIndex = EditorGUILayout.Popup("Serial Port", 0, availablePorts);
-            dropdown.selectedPort = "";
-        }
-    }
 }

@@ -84,7 +84,7 @@ public class TextControll : MonoBehaviour
         }
     }
 
-    void UpdateText(string newText)
+    public void UpdateText(string newText)
     {
         if (currentFadeCoroutine != null)
         {

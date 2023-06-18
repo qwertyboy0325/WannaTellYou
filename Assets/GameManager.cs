@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public VideoController videoController;
+    public AudioManager audioManager;
     public TextControll textControll;
+    public ArduinoSerial arduinoSerial;
     private EGameState _state;
     private Coroutine currentPutQuestionCoroutine;
     public EGameState state { get => _state; }
@@ -51,7 +53,7 @@ public class GameManager : MonoBehaviour
     public void UpdateGameState(EGameState newState)
     {
         _state = newState;
-        Debug.Log("Updated Game state: " + newState);
+        Debug.Log("Updated Game state: " + _state);
         switch (_state)
         {
             case EGameState.Idle:
@@ -84,6 +86,9 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         _state = EGameState.AwaitAnswer;
+        int roundCount = QuestionManager.Instance.roundCount;
+        //QuestionManager.Instance.
+        if (roundCount == 0) audioManager.StartRecording();
         OnGameStateChanged?.Invoke(EGameState.AwaitAnswer);
         Debug.Log("Updated Game state: " + _state);
     }
@@ -103,6 +108,7 @@ public class GameManager : MonoBehaviour
     private void FinishAnserHandler()
     {
         StopCoroutine(currentPutQuestionCoroutine);
+        audioManager.StopRecording();
         videoController.PlayVideo(EVideo.ThirdLevel);
     }
 
@@ -114,7 +120,7 @@ public class GameManager : MonoBehaviour
             QuestionManager.Instance.RedrawQuestion();
             return;
         }
-        uint roundCount = QuestionManager.Instance.roundCount;
+        int roundCount = QuestionManager.Instance.roundCount;
         int maxCount = QuestionManager.Instance.relation.maxQuestionLimit;
         Debug.Log(roundCount);
         if (roundCount >= maxCount - 1)
